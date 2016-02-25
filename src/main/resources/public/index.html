@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="JodaTime Parsing Debugger">
+    <meta name="author" content="Paul Wellner Bou">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="//code.jquery.com/jquery-2.2.1.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+            <div id="navbar">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">JodaTime Parser</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="jumbotron">
+        <div class="container">
+            <form>
+                <fieldset class="form-group">
+                    <label for="datestr">String you want to be parsed to date</label>
+                    <input type="text" class="form-control" id="datestr">
+                </fieldset>
+                <fieldset class="form-group">
+                    <label for="format">Date format above string is supposed to have</label>
+                    <input type="text" class="form-control" id="format" placeholder='e.g. "MM/dd/yyyy HH:mm:ss"'>
+                </fieldset>
+                <button type="submit" id="submit" class="btn btn-primary">Parse</button>
+            </form>
+        </div>
+        <hr/>
+        <div class="container">
+            <div class="form-group">
+                <label>Result:</label>
+                <pre class="" id="result"></pre>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        This service is made available for you by <a href="http://paul.wellnerbou.de">Paul Wellner Bou</a> and Heroku.
+    </footer>
+
+    <script>
+        function writeResult() {
+            $.ajax({
+                url: "/parse?format=" + $('#format').val() + "&datestr=" + $('#datestr').val(),
+                success: function (data) {
+                    write(data);
+                },
+                error: function (data) {
+                    write(data);
+                }
+            });
+        }
+
+        function write(data) {
+            $('#result').html(JSON.stringify(data, null, '  '));
+        }
+
+        $("button#submit").click(function (e) {
+            e.preventDefault();
+            writeResult();
+        });
+    </script>
+</div> <!-- /container -->
+</body>
+</html>
