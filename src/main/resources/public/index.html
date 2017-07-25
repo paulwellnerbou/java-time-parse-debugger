@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta name="description" content="JodaTime Parsing Debugger">
+    <title>JodaTime Parse Debugger</title>
+    <meta name="description" content="JodaTime Parse Debugger">
     <meta name="author" content="Paul Wellner Bou">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
@@ -32,11 +33,13 @@
             <form>
                 <fieldset class="form-group">
                     <label for="datestr">String you want to be parsed to date</label>
-                    <input type="text" class="form-control" id="datestr">
+                    <input type="text" class="form-control" id="datestr" value="May 13 at 23:28"/>
                 </fieldset>
                 <fieldset class="form-group">
                     <label for="format">Date format above string is supposed to have</label>
-                    <input type="text" class="form-control" id="format" placeholder='e.g. "MM/dd/yyyy HH:mm:ss"'>
+                    <input type="text" class="form-control" id="format" value="MMM dd 'at' HH:mm" placeholder='e.g. "MM/dd/yyyy HH:mm:ss"'/>
+                    <p style="font-size: 1rem;">Help: <a href="http://www.joda.org/joda-time/apidocs/org/joda/time/format/DateTimeFormat.html">http://www.joda.org/joda-time/apidocs/org/joda/time/format/DateTimeFormat.html</a>
+                    </p>
                 </fieldset>
                 <button type="submit" id="submit" class="btn btn-primary">Parse</button>
             </form>
@@ -44,37 +47,51 @@
         <hr/>
         <div class="container">
             <div class="form-group">
-                <label>Result:</label>
+                <label>Result (formatted with JavaScript to ISO):</label>
+                <pre id="formatted-result"></pre>
+                <label>Result (raw JSON):</label>
                 <pre class="" id="result"></pre>
             </div>
         </div>
     </div>
 
     <footer class="footer">
-        This service is made available for you by <a href="http://paul.wellnerbou.de">Paul Wellner Bou</a> and Heroku.
+        <p>This service is made available for you by <a href="http://paul.wellnerbou.de">Paul Wellner Bou</a> and Heroku.</p>
     </footer>
 
     <script>
-        function writeResult() {
-            $.ajax({
-                url: "/parse?format=" + $('#format').val() + "&datestr=" + $('#datestr').val(),
-                success: function (data) {
-                    write(data);
-                },
-                error: function (data) {
-                    write(data);
-                }
-            });
-        }
-
-        function write(data) {
-            $('#result').html(JSON.stringify(data, null, '  '));
-        }
-
-        $("button#submit").click(function (e) {
-            e.preventDefault();
-            writeResult();
+      function writeResult() {
+        $.ajax({
+          url: "/parse?format=" + $('#format').val() + "&datestr=" + $('#datestr').val(),
+          success: function (data) {
+            write(data);
+            parse(data);
+          },
+          error: function (data) {
+            write(data);
+            parse(data);
+          }
         });
+      }
+
+      function parse(data) {
+        if(!data.millis) {
+          $('#formatted-result').html(data.status + ": " + data.statusText);
+        } else {
+          var date = new Date();
+          date.setMilliseconds(data.millis);
+          $('#formatted-result').html(date.toISOString());
+        }
+      }
+
+      function write(data) {
+        $('#result').html(JSON.stringify(data, null, '  '));
+      }
+
+      $("button#submit").click(function (e) {
+        e.preventDefault();
+        writeResult();
+      });
     </script>
 </div> <!-- /container -->
 </body>
