@@ -35,5 +35,6 @@ Make sure the jar with the current project version is called in `Procfile`. The 
 
 Again, make sure the jar with the current project version is called in `Procfile`.
 
+	heroku login
 	git push heroku master
 
