@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>JodaTime Parse Debugger</title>
-    <meta name="description" content="JodaTime Parse Debugger">
+    <title>Java Time Parse Debugger</title>
+    <meta name="description" content="Java Time Parse Debugger">
     <meta name="author" content="Paul Wellner Bou">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -21,7 +21,7 @@
         <div class="container">
             <div id="navbar">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">JodaTime Parser</a></li>
+                    <li class="active"><a href="#">Java Time Parser</a></li>
                 </ul>
             </div>
         </div>
@@ -37,7 +37,7 @@
                 <fieldset class="form-group">
                     <label for="format">Date format above string is supposed to have</label>
                     <input type="text" class="form-control" id="format" value="MMM dd 'at' HH:mm" placeholder='e.g. "MM/dd/yyyy HH:mm:ss"'/>
-                    <p style="font-size: 1rem;">Help: <a href="http://www.joda.org/joda-time/apidocs/org/joda/time/format/DateTimeFormat.html">http://www.joda.org/joda-time/apidocs/org/joda/time/format/DateTimeFormat.html</a>
+                    <p style="font-size: 1rem; padding-top: 0.2rem; margin-bottom: 0;">Help: <a href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html">https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html</a>
                     </p>
                 </fieldset>
                 <button type="submit" id="submit" class="btn btn-primary">Parse</button>
@@ -46,9 +46,17 @@
         <hr/>
         <div class="container">
             <div class="form-group">
-                <label>Result <span style="font-weight: normal; font-size: 0.9em;">(formatted with JavaScript's <code>new Date(millis).toString()</code>, time zone may not match input):</span></label>
+                <div class="small">Keep in mind that the returned result is of type
+                    <code><a href="https://docs.oracle.com/javase/8/docs/api/java/time/temporal/TemporalAccessor.html">java.time.temporal.TemporalAccessor</a></code>. If you want to parse it to a
+                    <code><a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalDateTime.html">java.time.LocalDateTime</a></code>,
+                    you need all necessary fields for
+                    the date in your format (and in the date string, too), if you want to parse it to a
+                    <code><a href="https://docs.oracle.com/javase/8/docs/api/java/time/ZonedDateTime.html">java.time.ZonedDateTime</a></code>,
+                    you need to give the time zone, as well.</div>
+                <p></p>
+                <label>Result <span style="font-weight: normal; font-size: 0.9em;">(formatted with JavaScript's <code>new Date(InstantSeconds * 1000 + NanoOfSecond).toString()</code>, converted to your local time zone):</span></label>
                 <pre id="formatted-result"></pre>
-                <label>Result <span style="font-weight: normal; font-size: 0.9em;">(raw JSON, serialized <code>org.joda.time.DateTime</code>)</span>:</label>
+                <label>Result <span style="font-weight: normal; font-size: 0.9em;">(converted <code>java.time.temporal.TemporalAccessor</code> to <code>Map</code>, converting each supported field)</span>:</label>
                 <pre class="" id="result"></pre>
             </div>
         </div>
@@ -74,10 +82,10 @@
       }
 
       function parse(data) {
-        if(!data.millis) {
-          $('#formatted-result').html(data.status + ": " + data.statusText);
+        if(!data.InstantSeconds) {
+          $('#formatted-result').html("Unable to create absolute Instant, day, month, hour, minutes, year and time zone is required.");
         } else {
-          var date = new Date(data.millis);
+          var date = new Date(data.InstantSeconds * 1000 + data.NanoOfSecond);
           $('#formatted-result').html(date.toString());
         }
       }

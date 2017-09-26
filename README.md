@@ -1,7 +1,9 @@
-# JodaTime Parsing Debugger
+# Java Time Parsing Debugger
 
-This is the minimal source code for [joda-time-parse-debugger.herokuapp.com](https://joda-time-parse-debugger.herokuapp.com/), a web based debugger for parsing date and time formats with Java's [JodaTime](http://www.joda.org/joda-time/).
+This is the minimal source code for [java-time-parse-debugger.herokuapp.com](https://java-time-parse-debugger.herokuapp.com/), a web based debugger for parsing date and time formats with Java 8.
 Inspired by [Grok Debugger](http://grokdebug.herokuapp.com/).
+
+This app
 
 ## Building
 

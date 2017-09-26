@@ -1,23 +1,27 @@
 buildscript {
+    ext {
+        springBootVersion = '2.0.0.M3'
+    }
     repositories {
+        maven { url 'https://repo.spring.io/libs-milestone' }
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.4.RELEASE")
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
     }
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
 jar {
     baseName = 'joda-time-parse-debugger'
-    version =  '0.1.1'
+    version =  '0.2'
 }
 
 repositories {
+    maven { url 'https://repo.spring.io/libs-milestone' }
     mavenCentral()
 }
 
@@ -25,9 +29,12 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-web")
-    compile 'joda-time:joda-time:2.9.9'
-
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.9.1'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.1'
+    
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+    testCompile "com.google.truth:truth:0.35"
     testCompile("junit:junit")
 }
 
@@ -36,9 +43,6 @@ bootRun {
     systemProperties = System.properties
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.0.1'
-}
 
 task stage {
     dependsOn build
