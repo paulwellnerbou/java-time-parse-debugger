@@ -3,7 +3,8 @@
 This is the minimal source code for [java-time-parse-debugger.herokuapp.com](https://java-time-parse-debugger.herokuapp.com/), a web based debugger for parsing date and time formats with Java 8.
 Inspired by [Grok Debugger](http://grokdebug.herokuapp.com/).
 
-This app
+This app was formerly called "JodaTime Parsing Debugger" and was reachable under https://joda-time-parse-debugger.herokuapp.com/. As Java 8's new DateTime API is inspired by JodaTime and
+users are encouraged to migrate to Java 8's API, I migrated this application as well.
 
 ## Building
 
